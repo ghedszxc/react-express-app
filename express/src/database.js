@@ -1,6 +1,5 @@
 const mysql = require("mysql2/promise"); // Use 'promise' for async/await
 
-console.log("!!!!", process.env.HOST, process.env.USER, process.env.DB_NAME);
 const pool = mysql.createPool({
   host: process.env.HOST,
   user: process.env.USER,

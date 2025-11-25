@@ -8,7 +8,7 @@ class UserController {
       res.json(users);
     } catch (error) {
       console.error("Error fetching users:", error);
-      res.status(500).json({ error: "Internal server error" });
+      res.status(500).json({ error: error?.message });
     }
   }
 
@@ -16,27 +16,28 @@ class UserController {
     try {
       const { id } = req.params;
       const user = await User.getUserById(id);
-      if (user) {
-        res.json(user);
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
+      user
+        ? res.json(user)
+        : res.status(404).json({ message: "User not found" });
     } catch (error) {
       console.error("Error fetching user:", error);
-      res.status(500).json({ error: "Internal server error" });
+      res.status(500).json({ error: error?.message });
     }
   }
 
-  //   static async createUser(req, res) {
-  //     try {
-  //       const { name, email } = req.body;
-  //       const newUserId = await User.createUser(name, email);
-  //       res.status(201).json({ id: newUserId, message: 'User created successfully' });
-  //     } catch (error) {
-  //       console.error('Error creating user:', error);
-  //       res.status(500).json({ error: 'Internal server error' });
-  //     }
-  //   }
+  static async createUser(req, res) {
+    try {
+      const { username, password, name } = req.body;
+      const newUserId = await User.createUser(username, password, name);
+      res.status(201).json({
+        id: newUserId,
+        message: `${name} is successfully added from user list`,
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ error: error?.message });
+    }
+  }
 
   // Add more controller methods for update, delete, etc.
 }

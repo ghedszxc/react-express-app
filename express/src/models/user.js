@@ -1,5 +1,5 @@
 const pool = require("../database");
-
+const bcrypt = require("bcrypt");
 class User {
   static async getAllUsers() {
     const [rows] = await pool.execute("SELECT * FROM users");
@@ -11,10 +11,15 @@ class User {
     return rows[0]; // Return the first row if found
   }
 
-  //   static async createUser(name, email) {
-  //     const [result] = await pool.execute('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
-  //     return result.insertId;
-  //   }
+  static async createUser(username, password, name) {
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const [result] = await pool.execute(
+      "INSERT INTO users (username, password, name) VALUES (?, ?, ?)",
+      [username, hashedPassword, name]
+    );
+    return result.insertId;
+  }
 
   // Add more methods for update, delete, etc.
 }
